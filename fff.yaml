@@ -1,0 +1,45 @@
+---
+- name: Install and configure Nginx
+  hosts: localhost
+  become: true
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Install git
+      apt:
+        name: git
+        state: present
+    
+    - name: Copy Nginx configuration file
+      copy:
+        src: ./default
+        dest: /etc/nginx/sites-enabled/default
+        mode: 0644
+
+    - name: Restart Nginx service
+      service:
+        name: nginx
+        state: restarted
+    
+    - name: Cloning git repository
+      git:
+        repo: "https://github.com/veekrum/task.git"
+        dest: /tmp/task/
+
+    - name: Copying the files to root folder
+      copy:
+        src: /tmp/task/
+        dest: /usr/share/nginx/html/
+
+    - name: Restart Nginx service
+      service:
+        name: nginx
+        state: restarted
