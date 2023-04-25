@@ -1,0 +1,4 @@
+
+-hosts:localhost
+gather_fact: False
+
